@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>老刘降价雷达</title>
+    <style>
+      :root {
+        --bg: #f2f3f1;
+        --surface: #ffffff;
+        --ink: #191c1f;
+        --ink-2: #4a5058;
+        --ink-3: #767e88;
+        --line: #e2e5e1;
+        --price: #d92b1c;
+        --price-ink: #c22415;
+        --accent: #191c1f;
+        --accent-ink: #ffffff;
+        --warn-bg: #fff3d6;
+        --warn-ink: #6d4c00;
+        --warn-line: #f0d489;
+        --green-bg: #e3f2e6;
+        --green-ink: #146c2e;
+        --yellow-bg: #fdf0cd;
+        --yellow-ink: #7a5600;
+        --grayred-bg: #fde9e7;
+        --grayred-ink: #a52a1e;
+        --btn-off-bg: #eef0ee;
+        --btn-off-ink: #9aa1a9;
+        --watch-on-bg: #d92b1c;
+        --watch-on-ink: #ffffff;
+        --chip-bg: #f0f1ef;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #131518;
+          --surface: #1d2024;
+          --ink: #eceef0;
+          --ink-2: #b9bfc7;
+          --ink-3: #8b929c;
+          --line: #33373d;
+          --price: #ff7a6b;
+          --price-ink: #ff8d80;
+          --accent: #eceef0;
+          --accent-ink: #191c1f;
+          --warn-bg: #3a2f10;
+          --warn-ink: #f2d38a;
+          --warn-line: #6b5716;
+          --green-bg: #173a21;
+          --green-ink: #7fd598;
+          --yellow-bg: #3d3210;
+          --yellow-ink: #f0cd6e;
+          --grayred-bg: #40201c;
+          --grayred-ink: #ff9d92;
+          --btn-off-bg: #26292e;
+          --btn-off-ink: #6d747e;
+          --watch-on-bg: #d92b1c;
+          --watch-on-ink: #ffffff;
+          --chip-bg: #26292e;
+        }
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        height: 100dvh;
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ---------- 顶部固定栏 ---------- */
+      header.topbar {
+        flex: none;
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+        padding: 14px 18px 12px;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .topbar h1 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+      }
+      .topbar .sub {
+        margin: 3px 0 0;
+        font-size: 14px;
+        color: var(--ink-2);
+      }
+      .topbar .date {
+        flex: none;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--price-ink);
+        background: var(--grayred-bg);
+        border-radius: 8px;
+        padding: 7px 10px;
+        white-space: nowrap;
+      }
+
+      /* ---------- 避坑横幅 ---------- */
+      .alert {
+        flex: none;
+        background: var(--warn-bg);
+        border-bottom: 1px solid var(--warn-line);
+        color: var(--warn-ink);
+        padding: 10px 18px;
+        font-size: 15.5px;
+        line-height: 1.55;
+      }
+      .alert strong { font-weight: 800; }
+
+      /* ---------- 筛选行 ---------- */
+      nav.filters {
+        flex: none;
+        display: flex;
+        gap: 8px;
+        padding: 12px 14px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+      }
+      nav.filters button {
+        flex: 1;
+        min-height: 54px;
+        font-size: 17px;
+        font-weight: 700;
+        font-family: inherit;
+        border: 2px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface);
+        color: var(--ink);
+        cursor: pointer;
+        padding: 6px 4px;
+      }
+      nav.filters button[aria-pressed="true"] {
+        background: var(--accent);
+        color: var(--accent-ink);
+        border-color: var(--accent);
+      }
+      nav.filters button:active { opacity: 0.75; }
+
+      /* ---------- 卡片流（内部滚动） ---------- */
+      main.feed {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 14px 14px 20px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 18px 16px 16px;
+        margin-bottom: 14px;
+        max-width: 760px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .card[hidden] { display: none; }
+
+      .card-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .card-head h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 800;
+        line-height: 1.3;
+      }
+      .cred {
+        flex: none;
+        font-size: 14px;
+        font-weight: 800;
+        border-radius: 7px;
+        padding: 5px 9px;
+        white-space: nowrap;
+        margin-top: 2px;
+      }
+      .cred-high { background: var(--green-bg); color: var(--green-ink); }
+      .cred-mid { background: var(--yellow-bg); color: var(--yellow-ink); }
+      .cred-pending { background: var(--grayred-bg); color: var(--grayred-ink); }
+
+      .price-row {
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 6px 12px;
+        margin-top: 10px;
+      }
+      .price-label { font-size: 16px; color: var(--ink-2); font-weight: 600; }
+      .price {
+        font-size: 44px;
+        font-weight: 800;
+        color: var(--price);
+        line-height: 1.05;
+        letter-spacing: -0.5px;
+      }
+      .price .unit { font-size: 22px; font-weight: 700; }
+      .price-note { font-size: 15px; color: var(--ink-2); }
+      .price-status {
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--price);
+        line-height: 1.15;
+      }
+
+      .official-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px 10px;
+        margin-top: 6px;
+        font-size: 15.5px;
+        color: var(--ink-3);
+        line-height: 1.5;
+      }
+      .official-row s { text-decoration-thickness: 1.5px; }
+      .drop-badge {
+        background: var(--price);
+        color: #fff;
+        font-weight: 800;
+        font-size: 15px;
+        border-radius: 7px;
+        padding: 3px 9px;
+        white-space: nowrap;
+      }
+
+      .breakdown {
+        margin-top: 14px;
+        border-top: 1px dashed var(--line);
+        padding-top: 12px;
+        display: grid;
+        gap: 7px;
+      }
+      .breakdown .row {
+        display: flex;
+        gap: 10px;
+        font-size: 15.5px;
+        line-height: 1.55;
+      }
+      .breakdown .k {
+        flex: none;
+        width: 76px;
+        font-weight: 700;
+        color: var(--ink-2);
+      }
+      .breakdown .v { color: var(--ink); }
+      .tag {
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 800;
+        border-radius: 5px;
+        padding: 1px 6px;
+        margin-left: 4px;
+        vertical-align: 1px;
+        background: var(--chip-bg);
+        color: var(--ink-2);
+        white-space: nowrap;
+      }
+      .tag-cond { background: var(--yellow-bg); color: var(--yellow-ink); }
+
+      .meta-line {
+        margin-top: 12px;
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--ink-2);
+      }
+      .meta-line .k { font-weight: 700; color: var(--ink); }
+
+      .verdict {
+        margin-top: 10px;
+        font-size: 16.5px;
+        line-height: 1.65;
+        color: var(--ink);
+      }
+      .verdict .k { font-weight: 800; }
+
+      .source-line {
+        margin-top: 10px;
+        font-size: 13.5px;
+        line-height: 1.6;
+        color: var(--ink-3);
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .actions .watch-wrap { flex: 1; }
+      .btn-watch {
+        width: 100%;
+        min-height: 56px;
+        font-size: 18px;
+        font-weight: 800;
+        font-family: inherit;
+        border-radius: 10px;
+        border: 2px solid var(--price);
+        background: var(--surface);
+        color: var(--price-ink);
+        cursor: pointer;
+      }
+      .btn-watch[aria-pressed="true"] {
+        background: var(--watch-on-bg);
+        color: var(--watch-on-ink);
+      }
+      .btn-watch:active { opacity: 0.8; }
+      .watch-note {
+        margin-top: 5px;
+        font-size: 13px;
+        color: var(--ink-3);
+        text-align: center;
+      }
+      .btn-buy {
+        flex: 1;
+        min-height: 56px;
+        font-size: 18px;
+        font-weight: 700;
+        font-family: inherit;
+        border-radius: 10px;
+        border: 2px solid var(--line);
+        background: var(--btn-off-bg);
+        color: var(--btn-off-ink);
+        cursor: not-allowed;
+        align-self: flex-start;
+      }
+
+      .empty {
+        text-align: center;
+        font-size: 17px;
+        color: var(--ink-2);
+        line-height: 1.7;
+        padding: 44px 24px;
+      }
+      .empty[hidden] { display: none; }
+
+      /* ---------- 底部固定栏 ---------- */
+      footer.bottombar {
+        flex: none;
+        background: var(--surface);
+        border-top: 1px solid var(--line);
+        padding: 11px 18px calc(11px + env(safe-area-inset-bottom));
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--ink-2);
+        text-align: center;
+      }
+      footer.bottombar strong { color: var(--ink); }
+    </style>
+  </head>
+  <body>
+
+    <header class="topbar">
+      <div>
+        <h1>老刘降价雷达</h1>
+        <p class="sub">每日核实 · 拆账到手价</p>
+      </div>
+      <div class="date">2026-10-22 已更新</div>
+    </header>
+
+    <div class="alert" role="note">
+      <strong>今日避坑：</strong>iPhone 17 宣传「降1500」是拿涨过的价当锚，对首发价实际只降 700。看价先看对谁降。
+    </div>
+
+    <nav class="filters" aria-label="筛选">
+      <button type="button" data-filter="all" aria-pressed="true">全部（11）</button>
+      <button type="button" data-filter="high" aria-pressed="false">高可信</button>
+      <button type="button" data-filter="pending" aria-pressed="false">待核</button>
+      <button type="button" data-filter="watch" aria-pressed="false">我盯的</button>
+    </nav>
+
+    <main class="feed" id="feed">
+
+      <!-- 卡 1 -->
+      <article class="card" data-id="k100" data-cred="high">
+        <div class="card-head">
+          <h2>红米 Redmi K100 Pro Max（12+256GB）</h2>
+          <span class="cred cred-high">可信度 · 高</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">到手价</span>
+          <span class="price">3249<span class="unit"> 元</span></span>
+        </div>
+        <div class="official-row">
+          <span>官方价 <s>4499 元</s>（2026-08-11 首发）</span>
+          <span class="drop-badge">总降 1250 元</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span class="k">品牌直降</span><span class="v">品牌闪降 200 元</span></div>
+          <div class="row"><span class="k">国家补贴</span><span class="v">500 元</span></div>
+          <div class="row"><span class="k">平台补贴</span><span class="v">约 550 元<span class="tag">倒算</span></span></div>
+        </div>
+        <p class="meta-line"><span class="k">活动时效：</span>2026 双11，10-15 开启。注：泡泡网原文称闪降 200 的窗口至 10-18 24:00，但 10-22 更新的双11稿仍以 3249 为现行价，下单前建议复核结算页</p>
+        <p class="verdict"><span class="k">老刘判断：</span>品牌真降只有 200，大头是国补与平台；但 3249 买到今年 8 月的旗舰款、且已是京东双11国产单品销量第一，这个到手价本身成立，适合不追首发的人</p>
+        <p class="source-line">来源：泡泡网 2026-10-15；驱动中国 2026-10-22 更新；快科技 2026-10-18（销量）· 共 3 个来源</p>
+        <div class="actions">
+          <div class="watch-wrap">
+            <button type="button" class="btn-watch" data-watch="k100" aria-pressed="false">＋ 盯这台</button>
+            <div class="watch-note">本机记录，存在这台设备上</div>
+          </div>
+          <button type="button" class="btn-buy" disabled>一键购买 · 即将上线</button>
+        </div>
+      </article>
+
+      <!-- 卡 2 -->
+      <article class="card" data-id="iphone17" data-cred="high">
+        <div class="card-head">
+          <h2>苹果 iPhone 17（256GB）</h2>
+          <span class="cred cred-high">可信度 · 高</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">到手价</span>
+          <span class="price">5299<span class="unit"> 元起</span></span>
+          <span class="price-note">天猫苹果官方旗舰店</span>
+        </div>
+        <div class="official-row">
+          <span>官方价 <s>现行官网 6799 元</s>（首发 5999 元，2026-09-10 随 iPhone 18 发布上调 800 元）</span>
+          <span class="drop-badge">总降 1500 元</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span class="k">品牌直降</span><span class="v">0 元（苹果官网无双11活动、维持原价，客服证实优惠由平台出）</span></div>
+          <div class="row"><span class="k">国家补贴</span><span class="v">500 元</span></div>
+          <div class="row"><span class="k">平台补贴</span><span class="v">平台券 1000 元（10-20 起，此前为 800 元）</span></div>
+        </div>
+        <p class="meta-line"><span class="k">活动时效：</span>2026 双11，官方旗舰店活动 10-20 开启</p>
+        <p class="verdict"><span class="k">老刘判断：</span>5299 是这台机器的历史低位，但「直降 1000+国补 1500」的标题是拿涨过价的 6799 当锚算的；按首发价口径真实降幅是 700，值不值按 5299 本身判断即可</p>
+        <p class="source-line">来源：快科技 2026-10-15；中新经纬 2026-10-15（客服口径）；泡泡网 2026-10-15 · 共 3 个来源</p>
+        <div class="actions">
+          <div class="watch-wrap">
+            <button type="button" class="btn-watch" data-watch="iphone17" aria-pressed="false">＋ 盯这台</button>
+            <div class="watch-note">本机记录，存在这台设备上</div>
+          </div>
+          <button type="button" class="btn-buy" disabled>一键购买 · 即将上线</button>
+        </div>
+      </article>
+
+      <!-- 卡 3 -->
+      <article class="card" data-id="iphone18pro" data-cred="high">
+        <div class="card-head">
+          <h2>苹果 iPhone 18 Pro（256GB）</h2>
+          <span class="cred cred-high">可信度 · 高</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">到手价</span>
+          <span class="price">9699<span class="unit"> 元起</span></span>
+          <span class="price-note">含以旧换新条件项；无旧机到手 10199 元</span>
+        </div>
+        <div class="official-row">
+          <span>官方价 <s>10499 元</s>（由官方活动口径倒算；另有自媒体称起售 9999 元，未采信，待官网核验）</span>
+          <span class="drop-badge">总降 800 元（含条件项）</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span class="k">品牌直降</span><span class="v">官方旗舰店立减 300 元</span></div>
+          <div class="row"><span class="k">国家补贴</span><span class="v">0 元（售价超 6000 元，不适用）</span></div>
+          <div class="row"><span class="k">以旧换新</span><span class="v">补贴 500 元<span class="tag tag-cond">条件项</span>需有旧机且估值浮动</span></div>
+        </div>
+        <p class="meta-line"><span class="k">活动时效：</span>2026 双11，10-20 开启，另有 12 期免息（不计入价格）</p>
+        <p class="verdict"><span class="k">老刘判断：</span>上市才一个多月的新旗舰，真实直降只有 300；9699 这个数字成立的前提是手里有能抵 500 的旧机，没有旧机就按 10199 看</p>
+        <p class="source-line">来源：快科技 2026-10-15；中新经纬 2026-10-15；LED在线/集邦 2026-10-16 · 共 3 个来源（官方价基准为倒算，已注明）</p>
+        <div class="actions">
+          <div class="watch-wrap">
+            <button type="button" class="btn-watch" data-watch="iphone18pro" aria-pressed="false">＋ 盯这台</button>
+            <div class="watch-note">本机记录，存在这台设备上</div>
+          </div>
+          <button type="button" class="btn-buy" disabled>一键购买 · 即将上线</button>
+        </div>
+      </article>
+
+      <!-- 卡 4 -->
+      <article class="card" data-id="x500pro" data-cred="high">
+        <div class="card-head">
+          <h2>vivo X500 Pro（12+256GB）</h2>
+          <span class="cred cred-high">可信度 · 高</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">到手价</span>
+          <span class="price">5199<span class="unit"> 元</span></span>
+          <span class="price-note">京东自营</span>
+        </div>
+        <div class="official-row">
+          <span>官方价 <s>6499 元</s>（2026-09-29 开卖）</span>
+          <span class="drop-badge">总降 1300 元</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span class="k">品牌直降</span><span class="v">500 元（页面价 6499→5999，正好卡进 6000 元国补线）</span></div>
+          <div class="row"><span class="k">国家补贴</span><span class="v">500 元</span></div>
+          <div class="row"><span class="k">平台补贴</span><span class="v">约 300 元<span class="tag">倒算</span>800 元券包扣除国补 500</span></div>
+        </div>
+        <p class="meta-line"><span class="k">活动时效：</span>2026 双11窗口，10-15 起（有来源称优惠窗口至 11-13）</p>
+        <p class="verdict"><span class="k">老刘判断：</span>开卖 17 天就降，品牌真金白银只有 500，其余是国补和平台的钱；5199 需领到大额券，领不到券的账号到手价更高，下单先看订单明细。另有 5499、5166 两种异口径流传，未采信</p>
+        <p class="source-line">来源：什么值得买 2026-10-16（券明细实测拆解）；新浪实测攻略 2026-10-17（5199 一致）· 共 2 个来源</p>
+        <div class="actions">
+          <div class="watch-wrap">
+            <button type="button" class="btn-watch" data-watch="x500pro" aria-pressed="false">＋ 盯这台</button>
+            <div class="watch-note">本机记录，存在这台设备上</div>
+          </div>
+          <button type="button" class="btn-buy" disabled>一键购买 · 即将上线</button>
+        </div>
+      </article>
+
+      <!-- 卡 5 -->
+      <article class="card" data-id="mixflip2" data-cred="mid">
+        <div class="card-head">
+          <h2>小米 MIX Flip 2（12+256GB）</h2>
+          <span class="cred cred-mid">可信度 · 中</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">到手价</span>
+          <span class="price">约 2719<span class="unit"> 元</span></span>
+        </div>
+        <div class="official-row">
+          <span>官方价 <s>5999 元</s>（2025 年 6 月首发）</span>
+          <span class="drop-badge">总降 约 3280 元</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span class="k">品牌直降</span><span class="v">品牌立减 1800 元</span></div>
+          <div class="row"><span class="k">国家补贴</span><span class="v">500 元</span></div>
+          <div class="row"><span class="k">平台补贴</span><span class="v">约 1480 元<span class="tag">倒算</span>平台项占比异常高，疑含百亿补贴类渠道补贴</span></div>
+        </div>
+        <p class="meta-line"><span class="k">活动时效：</span>2026 双11（10 月中旬起）</p>
+        <p class="verdict"><span class="k">老刘判断：</span>总降幅过半，但品牌直降只有 1800，其余靠国补和平台补贴凑齐；小折叠清仓属性明显，能否复现 2719 取决于所在平台与地区，以结算页为准</p>
+        <p class="source-line">来源：驱动中国 2026-10-22 更新；LED在线/集邦 2026-10-16（两源到手价一致）· 共 2 个来源</p>
+        <div class="actions">
+          <div class="watch-wrap">
+            <button type="button" class="btn-watch" data-watch="mixflip2" aria-pressed="false">＋ 盯这台</button>
+            <div class="watch-note">本机记录，存在这台设备上</div>
+          </div>
+          <button type="button" class="btn-buy" disabled>一键购买 · 即将上线</button>
+        </div>
+      </article>
+
+      <!-- 卡 6 -->
+      <article class="card" data-id="findx9pro" data-cred="mid">
+        <div class="card-head">
+          <h2>OPPO Find X9 Pro（12+256GB）</h2>
+          <span class="cred cred-mid">可信度 · 中</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">到手价</span>
+          <span class="price">4500<span class="unit"> 元</span></span>
+          <span class="price-note">天猫，10-15 20 点档；京东口径 4549 元</span>
+        </div>
+        <div class="official-row">
+          <span>官方价 <s>5299 元</s>（2025 年 10 月首发）。注：天猫活动页标活动价 5599 元，比首发价高 300 元，差额来源未拉到（疑调价或 SKU 口径差）</span>
+          <span class="drop-badge">总降 799 元（对首发价）</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span class="k">平台直降</span><span class="v">300 元（喵速达，按活动价 5599 元起算）</span></div>
+          <div class="row"><span class="k">限时补贴</span><span class="v">299 元</span></div>
+          <div class="row"><span class="k">国家补贴</span><span class="v">500 元（该到手价需 88VIP 且所在地区有国补资格）</span></div>
+        </div>
+        <p class="meta-line"><span class="k">活动时效：</span>2026 双11，10-15 起</p>
+        <p class="verdict"><span class="k">老刘判断：</span>4500 一线有天猫逐项明细和京东 4549 互相印证，价格本身可信；但宣传若按活动价 5599 算「降 1099」是把先涨的 300 也算进去了，按首发价看真实降幅 799</p>
+        <p class="source-line">来源：逛丢同步天猫活动明细 2026-10-15；LED在线/集邦 2026-10-16 · 共 2 个来源</p>
+        <div class="actions">
+          <div class="watch-wrap">
+            <button type="button" class="btn-watch" data-watch="findx9pro" aria-pressed="false">＋ 盯这台</button>
+            <div class="watch-note">本机记录，存在这台设备上</div>
+          </div>
+          <button type="button" class="btn-buy" disabled>一键购买 · 即将上线</button>
+        </div>
+      </article>
+
+      <!-- 卡 7 -->
+      <article class="card" data-id="matex6" data-cred="mid">
+        <div class="card-head">
+          <h2>华为 Mate X6（起售版）</h2>
+          <span class="cred cred-mid">可信度 · 中</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">到手价</span>
+          <span class="price-status">未拉到</span>
+          <span class="price-note">仅确认官方口径「跌破万元」；起售版确切到手价无 1/2 级来源给出</span>
+        </div>
+        <div class="official-row">
+          <span>官方价 <s>12999 元起</s>（2024 年 11 月首发）</span>
+          <span class="drop-badge">全系直降 1000–3000 元</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span class="k">品牌直降</span><span class="v">1000–3000 元（按 SKU；3000 元为高配的最高值，不是起售版降幅）</span></div>
+          <div class="row"><span class="k">国家补贴</span><span class="v">0 元（售价超 6000 元，不适用）</span></div>
+          <div class="row"><span class="k">平台补贴</span><span class="v">未拉到</span></div>
+        </div>
+        <p class="meta-line"><span class="k">活动时效：</span>2026 双11（10 月下旬）</p>
+        <p class="verdict"><span class="k">老刘判断：</span>「直降 3000」是高配口径，起售版实际降多少暂无可靠数字；折叠屏这个降幅方向可信，但本卡不给出具体到手价，等拉到官方旗舰店明细再补</p>
+        <p class="source-line">来源：新浪双11汇总 2026-10（两篇口径一致：直降区间 1000–3000、跌破万元）· 共 2 个来源（均为汇总稿）</p>
+        <div class="actions">
+          <div class="watch-wrap">
+            <button type="button" class="btn-watch" data-watch="matex6" aria-pressed="false">＋ 盯这台</button>
+            <div class="watch-note">本机记录，存在这台设备上</div>
+          </div>
+          <button type="button" class="btn-buy" disabled>一键购买 · 即将上线</button>
+        </div>
+      </article>
+
+      <!-- 卡 8 -->
+      <article class="card" data-id="mi17ultra" data-cred="pending">
+        <div class="card-head">
+          <h2>小米 17 Ultra（12+512GB）</h2>
+          <span class="cred cred-pending">可信度 · 待核</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">到手价</span>
+          <span class="price-status">口径打架 · 待核</span>
+        </div>
+        <div class="official-row">
+          <span>官方价：首发 6999 元（2025-12-25）；2026-10-09 官方涨价后现行 <s>7999 元</s></span>
+          <span class="drop-badge">两说 约 1591 元 / 约 1093 元</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span class="k">品牌直降</span><span class="v">500 元（一说）或 1050 元（一说），两源不一致</span></div>
+          <div class="row"><span class="k">国家补贴</span><span class="v">两源文案均计入，但该机售价超 6000 元，按现行规则不应适用<span class="tag tag-cond">口径存疑</span></span></div>
+          <div class="row"><span class="k">以旧换新</span><span class="v">至高 2200 元<span class="tag tag-cond">条件项</span>阶梯估值</span></div>
+        </div>
+        <p class="meta-line"><span class="k">活动时效：</span>2026 双11（10 月中旬起）</p>
+        <p class="verdict"><span class="k">老刘判断：</span>这是今天口径最乱的一张卡：直降金额两源差一倍，到手价差近 500，且疑似把不适用的国补算进了优惠。6408 大概率混入了以旧换新估值，不是无条件到手价；下单只认结算页，本卡数字不得直接引用</p>
+        <p class="source-line">来源：LED在线/集邦 2026-10-16（直降 500、6408）；驱动中国 2026-10-22 更新（立减 1050、约 6906）· 共 2 个来源（互相冲突）</p>
+        <div class="actions">
+          <div class="watch-wrap">
+            <button type="button" class="btn-watch" data-watch="mi17ultra" aria-pressed="false">＋ 盯这台</button>
+            <div class="watch-note">本机记录，存在这台设备上</div>
+          </div>
+          <button type="button" class="btn-buy" disabled>一键购买 · 即将上线</button>
+        </div>
+      </article>
+
+      <!-- 卡 9 -->
+      <article class="card" data-id="pura90" data-cred="pending">
+        <div class="card-head">
+          <h2>华为 Pura 90 Pro Max（12+256GB）</h2>
+          <span class="cred cred-pending">可信度 · 待核</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">到手价</span>
+          <span class="price">4859.19<span class="unit"> 元</span></span>
+          <span class="price-note">京东，2026-10-20</span>
+        </div>
+        <div class="official-row">
+          <span>官方价：未拉到统一官方价（中关村在线口径活动前价 5264.19 元；16+512GB 另有 7499 元单源说法）</span>
+          <span class="drop-badge">约降 405 元（对活动前价）</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span class="k">品牌直降</span><span class="v">未拉到</span></div>
+          <div class="row"><span class="k">国家补贴</span><span class="v">未计入该口径</span></div>
+          <div class="row"><span class="k">平台补贴</span><span class="v">1 件 9 折 + 满 100 元 9 折券连乘（均为平台/店铺项）</span></div>
+        </div>
+        <p class="meta-line"><span class="k">活动时效：</span>京东限时特惠，2026-10-20 在架，结束时间未拉到</p>
+        <p class="verdict"><span class="k">老刘判断：</span>这是单店单日的券后价，靠两张 9 折券连乘，复现条件苛刻；且该机首发价基准都没拉齐，本卡只作线索，入手前必须以官方旗舰店标价重新核对</p>
+        <p class="source-line">来源：中关村在线 2026-10-20（单一编辑源）；新浪汇总（16+512 约 5000 元，单源说法）· 来源数 1+</p>
+        <div class="actions">
+          <div class="watch-wrap">
+            <button type="button" class="btn-watch" data-watch="pura90" aria-pressed="false">＋ 盯这台</button>
+            <div class="watch-note">本机记录，存在这台设备上</div>
+          </div>
+          <button type="button" class="btn-buy" disabled>一键购买 · 即将上线</button>
+        </div>
+      </article>
+
+      <!-- 卡 10 -->
+      <article class="card" data-id="magic8air" data-cred="pending">
+        <div class="card-head">
+          <h2>荣耀 Magic8 Pro Air（12+256GB）</h2>
+          <span class="cred cred-pending">可信度 · 待核</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">到手价</span>
+          <span class="price">4499<span class="unit"> 元起</span></span>
+          <span class="price-note">仅国补口径确证</span>
+        </div>
+        <div class="official-row">
+          <span>官方价 <s>4999 元起</s>（2026 年 1 月发布；16+512GB 为 5599 元）</span>
+          <span class="drop-badge">已确证降 500 元</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span class="k">品牌直降</span><span class="v">当期未拉到确证（该机 2026 年 2 月曾官降 300 至 4699 起，是否延续至双11未确认）</span></div>
+          <div class="row"><span class="k">国家补贴</span><span class="v">500 元</span></div>
+          <div class="row"><span class="k">平台补贴</span><span class="v">未拉到</span></div>
+        </div>
+        <p class="meta-line"><span class="k">活动时效：</span>2026 双11（国补为长期政策项）</p>
+        <p class="verdict"><span class="k">老刘判断：</span>目前只能确认「国补后 4499 起」这一层；网上流传的「16+512 不到 3500」出自 AI 汇总稿单源，与该机价格带差距过大，未核实前不采信。若 2 月官降 300 仍在，实际到手可至 4199，需以官方商城当日标价为准</p>
+        <p class="source-line">来源：荣耀官方定价（经 HardwareZone 2026-01-21）；新浪价格梳理（AI 汇总稿，仅作线索）· 来源数 1（定价）+ 线索</p>
+        <div class="actions">
+          <div class="watch-wrap">
+            <button type="button" class="btn-watch" data-watch="magic8air" aria-pressed="false">＋ 盯这台</button>
+            <div class="watch-note">本机记录，存在这台设备上</div>
+          </div>
+          <button type="button" class="btn-buy" disabled>一键购买 · 即将上线</button>
+        </div>
+      </article>
+
+      <!-- 卡 11 -->
+      <article class="card" data-id="ace6t" data-cred="pending">
+        <div class="card-head">
+          <h2>一加 Ace 6T（12+256GB）</h2>
+          <span class="cred cred-pending">可信度 · 待核</span>
+        </div>
+        <div class="price-row">
+          <span class="price-label">到手价</span>
+          <span class="price">预估 2379<span class="unit"> 元</span></span>
+        </div>
+        <div class="official-row">
+          <span>官方价 约 3399 元<span class="tag">倒算/待核</span>由到手价 2379 + 直降 600 + 国补反推；该机首销价 2599 元，其间有涨价报道，现行官方价未直接拉到</span>
+          <span class="drop-badge">约降 1020 元（对倒算官方价）</span>
+        </div>
+        <div class="breakdown">
+          <div class="row"><span class="k">品牌直降</span><span class="v">600 元</span></div>
+          <div class="row"><span class="k">国家补贴</span><span class="v">约 420 元<span class="tag">倒算</span>降后价 2799 × 15%，未封顶</span></div>
+          <div class="row"><span class="k">平台补贴</span><span class="v">0 元（来源未提及）</span></div>
+        </div>
+        <p class="meta-line"><span class="k">活动时效：</span>2026 双11（10 月下旬）</p>
+        <p class="verdict"><span class="k">老刘判断：</span>整张卡只有一个 AI 汇总源，算术自洽但基准价是倒算出来的；在拉到一加官方或主流媒体口径之前，只能当线索，不能当报价用</p>
+        <p class="source-line">来源：新浪双11汇总 2026-10（单源，AI 汇总稿）· 共 1 个来源</p>
+        <div class="actions">
+          <div class="watch-wrap">
+            <button type="button" class="btn-watch" data-watch="ace6t" aria-pressed="false">＋ 盯这台</button>
+            <div class="watch-note">本机记录，存在这台设备上</div>
+          </div>
+          <button type="button" class="btn-buy" disabled>一键购买 · 即将上线</button>
+        </div>
+      </article>
+
+      <div class="empty" id="emptyState" hidden>
+        还没盯任何机型。<br />在卡片上点「盯这台」，它就会出现在这里。
+      </div>
+
+    </main>
+
+    <footer class="bottombar">
+      <strong>口径声明：</strong>价格为公开渠道核实口径，以结算页实付为准<br />
+      订阅推送开发中，先把本页添加到主屏幕
+    </footer>
+
+    <script>
+      (function () {
+        var KEY = "laoliu-price-radar-watch";
+        var watched = {};
+        try {
+          var raw = window.localStorage.getItem(KEY);
+          if (raw) {
+            JSON.parse(raw).forEach(function (id) { watched[id] = true; });
+          }
+        } catch (e) { watched = {}; }
+
+        function save() {
+          try {
+            window.localStorage.setItem(KEY, JSON.stringify(Object.keys(watched)));
+          } catch (e) { /* 存储不可用时仅保留本次会话状态 */ }
+        }
+
+        var cards = Array.prototype.slice.call(document.querySelectorAll(".card"));
+        var watchBtns = document.querySelectorAll("[data-watch]");
+        var filterBtns = document.querySelectorAll("[data-filter]");
+        var emptyState = document.getElementById("emptyState");
+        var currentFilter = "all";
+
+        function paintWatch() {
+          Array.prototype.forEach.call(watchBtns, function (btn) {
+            var on = !!watched[btn.getAttribute("data-watch")];
+            btn.setAttribute("aria-pressed", on ? "true" : "false");
+            btn.textContent = on ? "✓ 盯着呢" : "＋ 盯这台";
+          });
+        }
+
+        function applyFilter() {
+          var visible = 0;
+          cards.forEach(function (card) {
+            var show;
+            if (currentFilter === "all") show = true;
+            else if (currentFilter === "watch") show = !!watched[card.getAttribute("data-id")];
+            else show = card.getAttribute("data-cred") === currentFilter;
+            card.hidden = !show;
+            if (show) visible++;
+          });
+          emptyState.hidden = !(currentFilter === "watch" && visible === 0);
+        }
+
+        Array.prototype.forEach.call(filterBtns, function (btn) {
+          btn.addEventListener("click", function () {
+            currentFilter = btn.getAttribute("data-filter");
+            Array.prototype.forEach.call(filterBtns, function (b) {
+              b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+            });
+            applyFilter();
+            document.getElementById("feed").scrollTop = 0;
+          });
+        });
+
+        Array.prototype.forEach.call(watchBtns, function (btn) {
+          btn.addEventListener("click", function () {
+            var id = btn.getAttribute("data-watch");
+            if (watched[id]) { delete watched[id]; } else { watched[id] = true; }
+            save();
+            paintWatch();
+            if (currentFilter === "watch") applyFilter();
+          });
+        });
+
+        paintWatch();
+        applyFilter();
+      })();
+    </script>
+  </body>
+</html>
