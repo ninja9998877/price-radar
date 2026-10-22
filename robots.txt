@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ninja9998877.github.io/price-radar/sitemap.xml
