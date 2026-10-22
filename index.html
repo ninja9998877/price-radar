@@ -736,6 +736,9 @@
         还没盯任何机型。<br />在卡片上点「盯这台」，它就会出现在这里。
       </div>
 
+      <div style="text-align:center;color:#8a8f98;font-size:12px;padding:12px 0 6px;">
+        本页已被打开 <span id="busuanzi_value_site_pv">…</span> 次，共有 <span id="busuanzi_value_site_uv">…</span> 位访客
+      </div>
     </main>
 
     <footer class="bottombar">
@@ -810,6 +813,24 @@
 
         paintWatch();
         applyFilter();
+      })();
+    </script>
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script>
+      (function () {
+        var API = "https://abacus.jasoncameron.dev/hit/laoliu-radar/";
+        function hit(k) {
+          try { fetch(API + k, { mode: "cors", keepalive: true }).catch(function () {}); } catch (e) {}
+        }
+        hit("page_pv");
+        document.addEventListener("click", function (e) {
+          var b = e.target && e.target.closest ? e.target.closest("[data-watch]") : null;
+          if (!b) return;
+          if (b.getAttribute("aria-pressed") === "true") {
+            hit("watch_total");
+            hit("watch_" + b.getAttribute("data-watch"));
+          }
+        }, false);
       })();
     </script>
   </body>
