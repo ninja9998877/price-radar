@@ -188,6 +188,17 @@
       .card[hidden] { display: none; }
       .detail-link { display: inline-block; margin: 0 0 12px; font-size: 15px; font-weight: 600; }
 
+      /* 全部机型一览（固定基础设施：首页顶部总览，点行直达机型页） */
+      .directory { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 6px 0; margin: 0 0 14px; }
+      .directory h2 { font-size: 17px; padding: 10px 14px 8px; margin: 0; }
+      .directory .dir-hint { font-size: 13px; color: #888; padding: 0 14px 8px; margin: 0; }
+      .dir-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 11px 14px; border-top: 1px solid #f0f0f0; color: var(--ink); text-decoration: none; }
+      .dir-row:active { background: #f7f7f7; }
+      .dir-name { font-size: 16px; font-weight: 600; line-height: 1.3; }
+      .dir-note { font-size: 12px; color: #888; font-weight: 400; }
+      .dir-price { font-size: 16px; font-weight: 700; white-space: nowrap; }
+      .dir-price small { font-size: 12px; color: #888; font-weight: 400; }
+
       .card-head {
         display: flex;
         align-items: flex-start;
@@ -401,6 +412,24 @@
       <button type="button" data-filter="pending" aria-pressed="false">待核</button>
       <button type="button" data-filter="watch" aria-pressed="false">我盯的</button>
     </nav>
+
+
+    <!-- 全部机型一览（固定基础设施：点行直达对应机型页） -->
+    <section class="directory" aria-label="全部机型一览">
+      <h2>全部机型一览 · 点名字直达完整拆账</h2>
+      <p class="dir-hint">11 台都在这张表里，先看价、再点进去看拆账，不用一张张往下翻。</p>
+      <a class="dir-row" href="models/k100.html"><span class="dir-name">红米 K100 Pro Max</span><span class="dir-price">3249 元<small> · 降 1250</small></span></a>
+      <a class="dir-row" href="models/iphone17.html"><span class="dir-name">苹果 iPhone 17</span><span class="dir-price">5299 元起<small> · 对现行官网降 1500</small></span></a>
+      <a class="dir-row" href="models/iphone18pro.html"><span class="dir-name">苹果 iPhone 18 Pro</span><span class="dir-price">9699 元起<small> · 构成待核</small></span></a>
+      <a class="dir-row" href="models/x500pro.html"><span class="dir-name">vivo X500 Pro</span><span class="dir-price">5199 元<small> · 降 1300</small></span></a>
+      <a class="dir-row" href="models/mixflip2.html"><span class="dir-name">小米 MIX Flip 2</span><span class="dir-price">约 2719 元<small> · 降约 3280</small></span></a>
+      <a class="dir-row" href="models/findx9pro.html"><span class="dir-name">OPPO Find X9 Pro</span><span class="dir-price">4500 元<small> · 对首发降 799</small></span></a>
+      <a class="dir-row" href="models/matex6.html"><span class="dir-name">华为 Mate X6</span><span class="dir-price">起售版待核<small> · 12+512 款实测 8279.10</small></span></a>
+      <a class="dir-row" href="models/mi17ultra.html"><span class="dir-name">小米 17 Ultra</span><span class="dir-price">口径打架<small> · 6408 / 约 6906 两说</small></span></a>
+      <a class="dir-row" href="models/pura90.html"><span class="dir-name">华为 Pura 90 Pro Max</span><span class="dir-price">4859.19 元<small> · 单店极值，延续待核</small></span></a>
+      <a class="dir-row" href="models/magic8air.html"><span class="dir-name">荣耀 Magic8 Pro Air</span><span class="dir-price">4499 元起<small> · 仅国补口径</small></span></a>
+      <a class="dir-row" href="models/ace6t.html"><span class="dir-name">一加 Ace 6T</span><span class="dir-price">2336.65 元<small> · 降 1162</small></span></a>
+    </section>
 
     <main class="feed" id="feed">
 
