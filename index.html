@@ -421,17 +421,17 @@
     <section class="directory" aria-label="全部机型一览">
       <h2>全部机型一览 · 点名字直达完整拆账</h2>
       <p class="dir-hint">11 台都在这张表里，先看价、再点进去看拆账，不用一张张往下翻。</p>
-      <a class="dir-row" href="models/k100.html"><span class="dir-name">红米 K100 Pro Max</span><span class="dir-price">3249 元<small> · 降 1250</small></span></a>
-      <a class="dir-row" href="models/iphone17.html"><span class="dir-name">苹果 iPhone 17</span><span class="dir-price">5299 元起<small> · 对现行官网降 1500</small></span></a>
-      <a class="dir-row" href="models/iphone18pro.html"><span class="dir-name">苹果 iPhone 18 Pro</span><span class="dir-price">9699 元起<small> · 构成待核</small></span></a>
-      <a class="dir-row" href="models/x500pro.html"><span class="dir-name">vivo X500 Pro</span><span class="dir-price">5199 元<small> · 降 1300</small></span></a>
-      <a class="dir-row" href="models/mixflip2.html"><span class="dir-name">小米 MIX Flip 2</span><span class="dir-price">约 2719 元<small> · 降约 3280</small></span></a>
-      <a class="dir-row" href="models/findx9pro.html"><span class="dir-name">OPPO Find X9 Pro</span><span class="dir-price">4500 元<small> · 对首发降 799</small></span></a>
-      <a class="dir-row" href="models/matex6.html"><span class="dir-name">华为 Mate X6</span><span class="dir-price">起售版待核<small> · 12+512 款实测 8279.10</small></span></a>
-      <a class="dir-row" href="models/mi17ultra.html"><span class="dir-name">小米 17 Ultra</span><span class="dir-price">口径打架<small> · 6408 / 约 6906 两说</small></span></a>
-      <a class="dir-row" href="models/pura90.html"><span class="dir-name">华为 Pura 90 Pro Max</span><span class="dir-price">4859.19 元<small> · 单店极值，延续待核</small></span></a>
-      <a class="dir-row" href="models/magic8air.html"><span class="dir-name">荣耀 Magic8 Pro Air</span><span class="dir-price">4499 元起<small> · 仅国补口径</small></span></a>
-      <a class="dir-row" href="models/ace6t.html"><span class="dir-name">一加 Ace 6T</span><span class="dir-price">2336.65 元<small> · 降 1162</small></span></a>
+      <a class="dir-row" href="models/k100.html"><span class="dir-name">红米 K100 Pro Max</span><span class="dir-price">到手价 3249 元<small> · 已降 1250 元</small></span></a>
+      <a class="dir-row" href="models/iphone17.html"><span class="dir-name">苹果 iPhone 17</span><span class="dir-price">到手价 5299 元起<small> · 已降 1500 元</small></span></a>
+      <a class="dir-row" href="models/iphone18pro.html"><span class="dir-name">苹果 iPhone 18 Pro</span><span class="dir-price">到手价 9699 元起<small> · 已降 800 元（含条件项）</small></span></a>
+      <a class="dir-row" href="models/x500pro.html"><span class="dir-name">vivo X500 Pro</span><span class="dir-price">到手价 5199 元<small> · 已降 1300 元</small></span></a>
+      <a class="dir-row" href="models/mixflip2.html"><span class="dir-name">小米 MIX Flip 2</span><span class="dir-price">到手价 约 2719 元<small> · 已降 约 3280 元</small></span></a>
+      <a class="dir-row" href="models/findx9pro.html"><span class="dir-name">OPPO Find X9 Pro</span><span class="dir-price">到手价 4500 元<small> · 已降 799 元（对首发价）</small></span></a>
+      <a class="dir-row" href="models/matex6.html"><span class="dir-name">华为 Mate X6</span><span class="dir-price">起售版到手价待核<small> · 12+512 款实测 8279.10</small></span></a>
+      <a class="dir-row" href="models/mi17ultra.html"><span class="dir-name">小米 17 Ultra</span><span class="dir-price">到手价口径打架<small> · 6408 / 约 6906 两说</small></span></a>
+      <a class="dir-row" href="models/pura90.html"><span class="dir-name">华为 Pura 90 Pro Max</span><span class="dir-price">到手价 4859.19 元<small> · 已降约 405 元（对活动前价）</small></span></a>
+      <a class="dir-row" href="models/magic8air.html"><span class="dir-name">荣耀 Magic8 Pro Air</span><span class="dir-price">到手价 4499 元起<small> · 已确证降 500 元</small></span></a>
+      <a class="dir-row" href="models/ace6t.html"><span class="dir-name">一加 Ace 6T</span><span class="dir-price">到手价 2336.65 元<small> · 已降 约 1162 元（对活动价）</small></span></a>
     </section>
 
       <!-- 卡 1 -->
@@ -920,8 +920,9 @@
           var badgeEl = card.querySelector(".drop-badge");
           var target = row.querySelector(".dir-price");
           if (!priceEl || !target) return;
-          var priceText = priceEl.textContent.replace(/\s+/g, " ").trim();
+          var priceText = "到手价 " + priceEl.textContent.replace(/\s+/g, " ").trim();
           var noteText = badgeEl ? badgeEl.textContent.replace(/\s+/g, " ").trim() : "";
+          noteText = noteText.replace(/^总降/, "已降").replace(/^约降/, "已降约");
           target.innerHTML = priceText + (noteText ? "<small> · " + noteText + "</small>" : "");
         });
       })();
