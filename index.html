@@ -908,5 +908,22 @@
         }, false);
       })();
     </script>
+    <script>
+      /* 目录价格与卡片同步（固定基础设施）：目录行有卡片价时以卡片为准，避免目录价过期；无卡片价的待核行保留静态文案 */
+      (function () {
+        document.querySelectorAll(".dir-row").forEach(function (row) {
+          var id = (row.getAttribute("href") || "").split("/").pop().replace(".html", "");
+          var card = document.querySelector('.card[data-id="' + id + '"]');
+          if (!card) return;
+          var priceEl = card.querySelector(".price");
+          var badgeEl = card.querySelector(".drop-badge");
+          var target = row.querySelector(".dir-price");
+          if (!priceEl || !target) return;
+          var priceText = priceEl.textContent.replace(/\s+/g, " ").trim();
+          var noteText = badgeEl ? badgeEl.textContent.replace(/\s+/g, " ").trim() : "";
+          target.innerHTML = priceText + (noteText ? "<small> · " + noteText + "</small>" : "");
+        });
+      })();
+    </script>
   </body>
 </html>
