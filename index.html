@@ -434,20 +434,20 @@
     <main class="feed" id="feed">
 
     <!-- 全部机型一览（固定基础设施：点行直达对应机型页） -->
-    <section class="directory" aria-label="全部机型一览">
-      <h2>全部机型一览</h2>
+    <section class="directory" id="directory" aria-label="机型一览">
+      <h2>机型一览</h2>
       <p class="dir-hint">点一行看完整拆账；圆点是可信度：绿色高、橙色中、灰色待核。</p>
-      <a class="dir-row" href="models/k100.html"><span class="dir-top"><i class="dir-dot dot-high" title="可信度：高"></i><span class="dir-name">红米 K100 Pro Max</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 3249 元</span><span class="dir-drop">↓1250 元</span></span></a>
-      <a class="dir-row" href="models/iphone17.html"><span class="dir-top"><i class="dir-dot dot-high" title="可信度：高"></i><span class="dir-name">苹果 iPhone 17</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 5299 元起</span><span class="dir-drop">↓1500 元</span></span></a>
-      <a class="dir-row" href="models/iphone18pro.html"><span class="dir-top"><i class="dir-dot dot-mid" title="可信度：中"></i><span class="dir-name">苹果 iPhone 18 Pro</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 9699 元起</span><span class="dir-drop">↓800 元（含条件项）</span></span></a>
-      <a class="dir-row" href="models/x500pro.html"><span class="dir-top"><i class="dir-dot dot-high" title="可信度：高"></i><span class="dir-name">vivo X500 Pro</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 5199 元</span><span class="dir-drop">↓1300 元</span></span></a>
-      <a class="dir-row" href="models/mixflip2.html"><span class="dir-top"><i class="dir-dot dot-mid" title="可信度：中"></i><span class="dir-name">小米 MIX Flip 2</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 约 2719 元</span><span class="dir-drop">↓约 3280 元</span></span></a>
-      <a class="dir-row" href="models/findx9pro.html"><span class="dir-top"><i class="dir-dot dot-mid" title="可信度：中"></i><span class="dir-name">OPPO Find X9 Pro</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 4500 元</span><span class="dir-drop">↓799 元（对首发价）</span></span></a>
-      <a class="dir-row" href="models/matex6.html"><span class="dir-top"><i class="dir-dot dot-mid" title="可信度：中"></i><span class="dir-name">华为 Mate X6</span></span><span class="dir-bottom"><span class="dir-drop">起售版等核实 · 12+512 款实测 8279.10</span></span></a>
-      <a class="dir-row" href="models/mi17ultra.html"><span class="dir-top"><i class="dir-dot dot-pending" title="可信度：待核"></i><span class="dir-name">小米 17 Ultra</span></span><span class="dir-bottom"><span class="dir-drop">6408 / 约 6906 两说</span></span></a>
-      <a class="dir-row" href="models/pura90.html"><span class="dir-top"><i class="dir-dot dot-pending" title="可信度：待核"></i><span class="dir-name">华为 Pura 90 Pro Max</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 4859.19 元</span><span class="dir-drop">↓约 405 元（对活动前价）</span></span></a>
-      <a class="dir-row" href="models/magic8air.html"><span class="dir-top"><i class="dir-dot dot-pending" title="可信度：待核"></i><span class="dir-name">荣耀 Magic8 Pro Air</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 4499 元起</span><span class="dir-drop">↓500 元</span></span></a>
-      <a class="dir-row" href="models/ace6t.html"><span class="dir-top"><i class="dir-dot dot-mid" title="可信度：中"></i><span class="dir-name">一加 Ace 6T</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 2336.65 元</span><span class="dir-drop">↓约 1162 元（对活动价）</span></span></a>
+      <a class="dir-row" data-cred="high" href="models/k100.html"><span class="dir-top"><i class="dir-dot dot-high" title="可信度：高"></i><span class="dir-name">红米 K100 Pro Max</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 3249 元</span><span class="dir-drop">↓1250 元</span></span></a>
+      <a class="dir-row" data-cred="high" href="models/iphone17.html"><span class="dir-top"><i class="dir-dot dot-high" title="可信度：高"></i><span class="dir-name">苹果 iPhone 17</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 5299 元起</span><span class="dir-drop">↓1500 元</span></span></a>
+      <a class="dir-row" data-cred="mid" href="models/iphone18pro.html"><span class="dir-top"><i class="dir-dot dot-mid" title="可信度：中"></i><span class="dir-name">苹果 iPhone 18 Pro</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 9699 元起</span><span class="dir-drop">↓800 元（含条件项）</span></span></a>
+      <a class="dir-row" data-cred="high" href="models/x500pro.html"><span class="dir-top"><i class="dir-dot dot-high" title="可信度：高"></i><span class="dir-name">vivo X500 Pro</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 5199 元</span><span class="dir-drop">↓1300 元</span></span></a>
+      <a class="dir-row" data-cred="mid" href="models/mixflip2.html"><span class="dir-top"><i class="dir-dot dot-mid" title="可信度：中"></i><span class="dir-name">小米 MIX Flip 2</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 约 2719 元</span><span class="dir-drop">↓约 3280 元</span></span></a>
+      <a class="dir-row" data-cred="mid" href="models/findx9pro.html"><span class="dir-top"><i class="dir-dot dot-mid" title="可信度：中"></i><span class="dir-name">OPPO Find X9 Pro</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 4500 元</span><span class="dir-drop">↓799 元（对首发价）</span></span></a>
+      <a class="dir-row" data-cred="mid" href="models/matex6.html"><span class="dir-top"><i class="dir-dot dot-mid" title="可信度：中"></i><span class="dir-name">华为 Mate X6</span></span><span class="dir-bottom"><span class="dir-drop">起售版等核实 · 12+512 款实测 8279.10</span></span></a>
+      <a class="dir-row" data-cred="pending" href="models/mi17ultra.html"><span class="dir-top"><i class="dir-dot dot-pending" title="可信度：待核"></i><span class="dir-name">小米 17 Ultra</span></span><span class="dir-bottom"><span class="dir-drop">6408 / 约 6906 两说</span></span></a>
+      <a class="dir-row" data-cred="pending" href="models/pura90.html"><span class="dir-top"><i class="dir-dot dot-pending" title="可信度：待核"></i><span class="dir-name">华为 Pura 90 Pro Max</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 4859.19 元</span><span class="dir-drop">↓约 405 元（对活动前价）</span></span></a>
+      <a class="dir-row" data-cred="pending" href="models/magic8air.html"><span class="dir-top"><i class="dir-dot dot-pending" title="可信度：待核"></i><span class="dir-name">荣耀 Magic8 Pro Air</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 4499 元起</span><span class="dir-drop">↓500 元</span></span></a>
+      <a class="dir-row" data-cred="mid" href="models/ace6t.html"><span class="dir-top"><i class="dir-dot dot-mid" title="可信度：中"></i><span class="dir-name">一加 Ace 6T</span></span><span class="dir-bottom"><span class="dir-price">🏷️ 2336.65 元</span><span class="dir-drop">↓约 1162 元（对活动价）</span></span></a>
     </section>
 
     <!-- 自定义盯机（固定基础设施：型号只存用户本机 localStorage；核实上架需用户把型号告诉老刘） -->
@@ -891,6 +891,18 @@
             if (show) visible++;
           });
           emptyState.hidden = !(currentFilter === "watch" && visible === 0);
+          /* 目录跟随页签过滤：它属于页签内容，不再是全局常驻块 */
+          var dirSection = document.getElementById("directory");
+          var dirVisible = 0;
+          Array.prototype.forEach.call(document.querySelectorAll(".directory .dir-row"), function (row) {
+            var show;
+            if (currentFilter === "all") show = true;
+            else if (currentFilter === "watch") show = !!watched[row.getAttribute("href").split("/").pop().replace(".html", "")];
+            else show = row.getAttribute("data-cred") === currentFilter;
+            row.hidden = !show;
+            if (show) dirVisible++;
+          });
+          if (dirSection) dirSection.hidden = dirVisible === 0;
         }
 
         Array.prototype.forEach.call(filterBtns, function (btn) {
