@@ -188,16 +188,16 @@
       .card[hidden] { display: none; }
       .detail-link { display: inline-block; margin: 0 0 12px; font-size: 15px; font-weight: 600; }
 
-      /* 全部机型一览（固定基础设施：首页顶部总览，点行直达机型页） */
-      .directory { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 6px 0; margin: 0 0 14px; }
-      .directory h2 { font-size: 17px; padding: 10px 14px 8px; margin: 0; }
-      .directory .dir-hint { font-size: 13px; color: #888; padding: 0 14px 8px; margin: 0; }
-      .dir-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 11px 14px; border-top: 1px solid #f0f0f0; color: var(--ink); text-decoration: none; }
-      .dir-row:active { background: #f7f7f7; }
-      .dir-name { font-size: 16px; font-weight: 600; line-height: 1.3; }
-      .dir-note { font-size: 12px; color: #888; font-weight: 400; }
-      .dir-price { font-size: 16px; font-weight: 700; white-space: nowrap; }
-      .dir-price small { font-size: 12px; color: #888; font-weight: 400; }
+      /* 全部机型一览（固定基础设施：首页顶部总览，点行直达机型页；必须用主题变量，禁止写死白底/灰字，否则深色下白字隐形） */
+      .directory { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 6px 0; margin: 0 auto 14px; max-width: 760px; }
+      .directory h2 { font-size: 17px; color: var(--ink); padding: 10px 14px 8px; margin: 0; }
+      .directory .dir-hint { font-size: 13px; color: var(--ink-2); padding: 0 14px 8px; margin: 0; }
+      .dir-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 11px 14px; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+      .dir-row:active { background: var(--chip-bg); }
+      .dir-name { font-size: 16px; font-weight: 600; line-height: 1.3; color: var(--ink); }
+      .dir-note { font-size: 12px; color: var(--ink-2); font-weight: 400; }
+      .dir-price { font-size: 16px; font-weight: 700; white-space: nowrap; color: var(--price-ink); }
+      .dir-price small { font-size: 12px; color: var(--ink-2); font-weight: 400; }
 
       .card-head {
         display: flex;
@@ -414,6 +414,9 @@
     </nav>
 
 
+
+    <main class="feed" id="feed">
+
     <!-- 全部机型一览（固定基础设施：点行直达对应机型页） -->
     <section class="directory" aria-label="全部机型一览">
       <h2>全部机型一览 · 点名字直达完整拆账</h2>
@@ -430,8 +433,6 @@
       <a class="dir-row" href="models/magic8air.html"><span class="dir-name">荣耀 Magic8 Pro Air</span><span class="dir-price">4499 元起<small> · 仅国补口径</small></span></a>
       <a class="dir-row" href="models/ace6t.html"><span class="dir-name">一加 Ace 6T</span><span class="dir-price">2336.65 元<small> · 降 1162</small></span></a>
     </section>
-
-    <main class="feed" id="feed">
 
       <!-- 卡 1 -->
       <article class="card" data-id="k100" data-cred="high">
